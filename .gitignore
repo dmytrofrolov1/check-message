@@ -30,6 +30,7 @@ cpd-output.xml
 ## Obj-C/Swift specific
 *.hmap
 *.ipa
+*.xcuserstate
 
 # CocoaPods
 #
