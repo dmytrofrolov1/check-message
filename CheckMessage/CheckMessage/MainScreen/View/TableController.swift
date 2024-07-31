@@ -9,8 +9,8 @@ import UIKit
 
 
 protocol TableControllerInterface {
-    func addMessages(_ data: [String])
-    func addMessage(_ message: String)
+    func addMessages(_ data: [MessageViewModel])
+    func addMessage(_ message: MessageViewModel)
 }
 
 protocol TableControllerDelegate: AnyObject {
@@ -25,7 +25,7 @@ class TableController: NSObject {
     }
     
     private weak var tableView: UITableView?
-    private var data = [String]()
+    private var data = [MessageViewModel]()
     
     weak var delegate: TableControllerDelegate?
     
@@ -40,12 +40,12 @@ class TableController: NSObject {
 }
 
 extension TableController: TableControllerInterface {
-    func addMessages(_ data: [String]) {
+    func addMessages(_ data: [MessageViewModel]) {
         self.data.append(contentsOf: data.reversed())
         tableView?.reloadData()
     }
     
-    func addMessage(_ message: String) {
+    func addMessage(_ message: MessageViewModel) {
         data.insert(message, at: 0)
         tableView?.reloadData()
     }
@@ -61,8 +61,9 @@ extension TableController:UITableViewDelegate, UITableViewDataSource {
             return UITableViewCell()
         }
          
-        let message = data[indexPath.row]
-        cell.messageLabel.text = message
+        let viewModel = data[indexPath.row]
+        cell.messageLabel.text = viewModel.message
+
         cell.transform = CGAffineTransform(scaleX: 1, y: -1)
         
         return cell

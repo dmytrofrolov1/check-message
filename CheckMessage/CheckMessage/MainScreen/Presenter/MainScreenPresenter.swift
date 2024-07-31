@@ -19,8 +19,10 @@ class MainScreenPresenter {
 // MARK: - MainScreenPresentationLogic
 
 extension MainScreenPresenter: MainScreenPresentationLogic {
-
-
-    // MARK: - Presentation logic
+    func loadedData(_ data: [MessageDataModel]) {
+        let viewModels = data.map({ MessageViewModel(data: $0) })
+        output?.loadedMessages(viewModels)
+        
+    }
 
 }

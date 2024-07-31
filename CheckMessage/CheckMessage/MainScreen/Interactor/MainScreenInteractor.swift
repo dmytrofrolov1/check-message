@@ -18,7 +18,11 @@ class MainScreenInteractor {
 // MARK: - MainScreenBusinessLogic
 
 extension MainScreenInteractor: MainScreenBusinessLogic {
-
+    func loadData() {
+        let repos = TestMessgesRepository()
+        let messages = repos.messages
+        output?.loadedData(messages)
+    }
 
     // MARK: - Business logic
 

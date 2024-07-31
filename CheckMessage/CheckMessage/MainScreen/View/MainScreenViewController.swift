@@ -26,7 +26,7 @@ class MainScreenViewController: UIViewController {
         return field
     }()
 
-    private lazy var collectionController: TableController = {
+    private lazy var tableController: TableController = {
         let controller = TableController(tableView: tableView)
         return controller
     }()
@@ -65,6 +65,7 @@ class MainScreenViewController: UIViewController {
         view.backgroundColor = .white
         setupView()
         setupConstraints()
+        interactor.loadData()
     }
     
     private func setupView() {
@@ -90,7 +91,9 @@ class MainScreenViewController: UIViewController {
 // MARK: - MainScreenDisplayLogic
 
 extension MainScreenViewController: MainScreenDisplayLogic {
-
+    func loadedMessages(_ data: [MessageViewModel]) {
+        tableController.addMessages(data)
+    }
     // MARK: - Display logic
 }
 
