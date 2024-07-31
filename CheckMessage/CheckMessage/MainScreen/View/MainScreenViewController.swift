@@ -13,6 +13,24 @@ class MainScreenViewController: UIViewController {
     var interactor: MainScreenBusinessLogic!
     var router: MainScreenRouterProtocol!
 
+    private lazy var tableView: UITableView = {
+        let view = UITableView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private lazy var textField: UITextField = {
+        let field = UITextField()
+        field.translatesAutoresizingMaskIntoConstraints = false
+        
+        return field
+    }()
+
+    private lazy var collectionController: TableController = {
+        let controller = TableController(tableView: tableView)
+        return controller
+    }()
+    
 
     // MARK: - Initializers
 
@@ -44,7 +62,26 @@ class MainScreenViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .orange
+        view.backgroundColor = .white
+        setupView()
+        setupConstraints()
+    }
+    
+    private func setupView() {
+        view.addSubview(tableView)
+    }
+    
+    private func setupConstraints() {
+        
+        let guide = view.safeAreaLayoutGuide
+        
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: guide.topAnchor),
+            tableView.rightAnchor.constraint(equalTo: guide.rightAnchor),
+            tableView.bottomAnchor.constraint(equalTo: guide.bottomAnchor),
+            tableView.leftAnchor.constraint(equalTo: guide.leftAnchor)
+        ])
+        
     }
 
 }
@@ -54,7 +91,11 @@ class MainScreenViewController: UIViewController {
 
 extension MainScreenViewController: MainScreenDisplayLogic {
 
-
     // MARK: - Display logic
+}
 
+extension MainScreenViewController: TableControllerDelegate {
+    func loadData() {
+        print("load data in MainScreenViewController")
+    }
 }
