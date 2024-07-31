@@ -22,7 +22,6 @@ extension MainScreenPresenter: MainScreenPresentationLogic {
     func loadedData(_ data: [MessageDataModel]) {
         let viewModels = data.map({ MessageViewModel(data: $0) })
         output?.loadedMessages(viewModels)
-        
     }
 
 }

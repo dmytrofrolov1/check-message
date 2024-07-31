@@ -11,5 +11,5 @@ struct MessageDataModel {
     let messageId: String
     let userId: String
     let message: String
-    let data: Data?
+    let imageUrl: String?
 }

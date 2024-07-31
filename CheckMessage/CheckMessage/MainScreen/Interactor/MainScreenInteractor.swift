@@ -9,7 +9,7 @@
 import UIKit
 
 class MainScreenInteractor {
-
+    private let messagesDataSource = TestMessgesRepository()
     var output: MainScreenPresentationLogic?
 
 }
@@ -19,11 +19,11 @@ class MainScreenInteractor {
 
 extension MainScreenInteractor: MainScreenBusinessLogic {
     func loadData() {
-        let repos = TestMessgesRepository()
-        let messages = repos.messages
+        let messages = messagesDataSource.loadMessages()
         output?.loadedData(messages)
     }
 
     // MARK: - Business logic
 
 }
+

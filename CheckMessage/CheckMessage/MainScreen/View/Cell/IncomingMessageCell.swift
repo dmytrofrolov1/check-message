@@ -1,14 +1,14 @@
 //
-//  OutgoingMessageCell.swift
+//  IncomingMessageCell.swift
 //  CheckMessage
 //
-//  Created by Dmytro on 30.07.2024.
+//  Created by Dmytro on 31.07.2024.
 //
 
 import UIKit
 
-class OutgoingMessageCell: UITableViewCell, CellIdentifiable {
-    
+class IncomingMessageCell: UITableViewCell, CellIdentifiable {
+
     private enum Const {
         static let horizontalOffset: CGFloat = 10
         static let avatarImageSize: CGFloat = 40
@@ -83,16 +83,15 @@ class OutgoingMessageCell: UITableViewCell, CellIdentifiable {
         let maxMessageWidth = width/3*2
         
         NSLayoutConstraint.activate([
+            userAvatarImage.leftAnchor.constraint(equalTo: messageContainer.rightAnchor, constant: Const.horizontalOffset),
             userAvatarImage.topAnchor.constraint(greaterThanOrEqualTo: contentView.topAnchor, constant: Const.verticalOffset),
             userAvatarImage.widthAnchor.constraint(equalToConstant: Const.avatarImageSize),
             userAvatarImage.heightAnchor.constraint(equalToConstant: Const.avatarImageSize),
             userAvatarImage.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -Const.verticalOffset),
             userAvatarImage.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             
-            
             messageContainer.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Const.verticalOffset),
-            messageContainer.leftAnchor.constraint(equalTo: userAvatarImage.rightAnchor, constant: Const.horizontalOffset),
-            messageContainer.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -Const.horizontalOffset),
+            messageContainer.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: Const.horizontalOffset),
             messageContainer.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -Const.verticalOffset),
             messageContainer.widthAnchor.constraint(equalToConstant: maxMessageWidth),
             
@@ -103,4 +102,5 @@ class OutgoingMessageCell: UITableViewCell, CellIdentifiable {
             
         ])
     }
+
 }

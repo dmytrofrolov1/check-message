@@ -28,6 +28,7 @@ class MainScreenViewController: UIViewController {
 
     private lazy var tableController: TableController = {
         let controller = TableController(tableView: tableView)
+        controller.delegate = self
         return controller
     }()
     
@@ -82,9 +83,7 @@ class MainScreenViewController: UIViewController {
             tableView.bottomAnchor.constraint(equalTo: guide.bottomAnchor),
             tableView.leftAnchor.constraint(equalTo: guide.leftAnchor)
         ])
-        
     }
-
 }
 
 
@@ -99,6 +98,6 @@ extension MainScreenViewController: MainScreenDisplayLogic {
 
 extension MainScreenViewController: TableControllerDelegate {
     func loadData() {
-        print("load data in MainScreenViewController")
+        interactor.loadData()
     }
 }

@@ -21,7 +21,7 @@ protocol TableControllerDelegate: AnyObject {
 class TableController: NSObject {
   
     fileprivate enum Const {
-        static let fetchOffset: CGFloat = 20
+        static let fetchOffset: CGFloat = 30
     }
     
     private weak var tableView: UITableView?
@@ -36,6 +36,8 @@ class TableController: NSObject {
         self.tableView?.dataSource = self
         self.tableView?.transform = CGAffineTransform(scaleX: 1, y: -1)
         self.tableView?.register(OutgoingMessageCell.self, forCellReuseIdentifier: OutgoingMessageCell.reuseIdentifier)
+        self.tableView?.register(IncomingMessageCell.self, forCellReuseIdentifier: IncomingMessageCell.reuseIdentifier)
+        self.tableView?.separatorStyle = .none
     }
 }
 
@@ -57,16 +59,14 @@ extension TableController:UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: OutgoingMessageCell.reuseIdentifier, for: indexPath) as? OutgoingMessageCell else {
-            return UITableViewCell()
-        }
-         
+   
         let viewModel = data[indexPath.row]
-        cell.messageLabel.text = viewModel.message
-
-        cell.transform = CGAffineTransform(scaleX: 1, y: -1)
-        
-        return cell
+   
+        if viewModel.userId == GlobalConst.userId {
+            return outgoingMessage(tableView: tableView, indexPath: indexPath)
+        } else {
+            return incomingMessage(tableView: tableView, indexPath: indexPath)
+        }
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -75,4 +75,32 @@ extension TableController:UITableViewDelegate, UITableViewDataSource {
         
         delegate?.loadData()
     }
+    
+    
+    func outgoingMessage(tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: OutgoingMessageCell.reuseIdentifier, for: indexPath) as? OutgoingMessageCell else {
+            return UITableViewCell()
+        }
+         
+        let viewModel = data[indexPath.row]
+        cell.updateWithModel(viewModel)
+
+        cell.transform = CGAffineTransform(scaleX: 1, y: -1)
+        
+        return cell
+    }
+    
+    func incomingMessage(tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: IncomingMessageCell.reuseIdentifier, for: indexPath) as? IncomingMessageCell else {
+            return UITableViewCell()
+        }
+         
+        let viewModel = data[indexPath.row]
+        cell.updateWithModel(viewModel)
+
+        cell.transform = CGAffineTransform(scaleX: 1, y: -1)
+        
+        return cell
+    }
+    
 }
