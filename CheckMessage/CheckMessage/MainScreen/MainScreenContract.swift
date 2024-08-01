@@ -10,14 +10,17 @@ import UIKit
 
 protocol MainScreenBusinessLogic {
     func loadData()
+    func sendMessage(_ message: String)
 }
 
 protocol MainScreenPresentationLogic {
     func loadedData(_ data: [MessageDataModel])
+    func loadedData(_ message: MessageDataModel)
 }
 
 protocol MainScreenDisplayLogic: AnyObject {
     func loadedMessages(_ data: [MessageViewModel])
+    func loadedMessage(_ message: MessageViewModel)
 }
 
 protocol MainScreenRouterProtocol {

@@ -39,6 +39,13 @@ class TestMessgesRepository {
         return messages
     }
     
+    func sendMessage(message: String) -> MessageDataModel {
+        return MessageDataModel(messageId: UUID().uuidString, 
+                                userId: GlobalConst.userId,
+                                message: message,
+                                imageUrl: userImageUrl)
+    }
+    
     
     let loremIpsumText = """
     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
@@ -56,16 +63,5 @@ class TestMessgesRepository {
         
         return message
     }
-//    let messages = [
-//        MessageDataModel(messageId: "1", userId: "12", message: "some message", data: nil ),
-//        MessageDataModel(messageId: "2", userId: "12", message: "random", data: nil),
-//        MessageDataModel(messageId: "3", userId: "12", message: "m", data: nil),
-//        MessageDataModel(messageId: "4", userId: "12", message: "mess", data: nil),
-//        MessageDataModel(messageId: "5", userId: "12", message: "aaaa", data: nil),
-//        MessageDataModel(messageId: "6", userId: "12", message: "reter", data: nil),
-//        MessageDataModel(messageId: "7", userId: "12", message: "sdfsd", data: nil),
-//        MessageDataModel(messageId: "8", userId: "12", message: "sdf", data: nil),
-//        MessageDataModel(messageId: "9", userId: "12", message: "sdfas", data: nil),
-//        MessageDataModel(messageId: "10", userId: "12", message: "asfd", data: nil),
-//    ]
+
 }

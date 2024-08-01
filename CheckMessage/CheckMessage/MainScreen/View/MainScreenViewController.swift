@@ -16,12 +16,15 @@ class MainScreenViewController: UIViewController {
     private lazy var tableView: UITableView = {
         let view = UITableView()
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.tableFooterView = sendMessageView
         return view
     }()
     
     private lazy var textField: UITextField = {
         let field = UITextField()
         field.translatesAutoresizingMaskIntoConstraints = false
+        
+    
         
         return field
     }()
@@ -30,6 +33,13 @@ class MainScreenViewController: UIViewController {
         let controller = TableController(tableView: tableView)
         controller.delegate = self
         return controller
+    }()
+    
+    private lazy var sendMessageView: SendMessgeView = {
+        let view = SendMessgeView()
+        view.delegate = self
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
     
 
@@ -71,6 +81,7 @@ class MainScreenViewController: UIViewController {
     
     private func setupView() {
         view.addSubview(tableView)
+        view.addSubview(sendMessageView)
     }
     
     private func setupConstraints() {
@@ -80,8 +91,12 @@ class MainScreenViewController: UIViewController {
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: guide.topAnchor),
             tableView.rightAnchor.constraint(equalTo: guide.rightAnchor),
+            tableView.leftAnchor.constraint(equalTo: guide.leftAnchor),
             tableView.bottomAnchor.constraint(equalTo: guide.bottomAnchor),
-            tableView.leftAnchor.constraint(equalTo: guide.leftAnchor)
+//            sendMessageView.bottomAnchor.constraint(equalTo: guide.bottomAnchor),
+//            sendMessageView.leftAnchor.constraint(equalTo: guide.leftAnchor),
+//            sendMessageView.rightAnchor.constraint(equalTo: guide.rightAnchor),
+//            sendMessageView.topAnchor.constraint(equalTo: tableView.bottomAnchor),
         ])
     }
 }
@@ -90,6 +105,10 @@ class MainScreenViewController: UIViewController {
 // MARK: - MainScreenDisplayLogic
 
 extension MainScreenViewController: MainScreenDisplayLogic {
+    func loadedMessage(_ message: MessageViewModel) {
+        tableController.addMessage(message)
+    }
+    
     func loadedMessages(_ data: [MessageViewModel]) {
         tableController.addMessages(data)
     }
@@ -99,5 +118,12 @@ extension MainScreenViewController: MainScreenDisplayLogic {
 extension MainScreenViewController: TableControllerDelegate {
     func loadData() {
         interactor.loadData()
+    }
+}
+
+extension MainScreenViewController: SendMessgeViewDelegate {
+    func didTapSend(message: String) {
+        guard !message.isEmpty else { return }
+        interactor.sendMessage(message)
     }
 }

@@ -18,6 +18,11 @@ class MainScreenInteractor {
 // MARK: - MainScreenBusinessLogic
 
 extension MainScreenInteractor: MainScreenBusinessLogic {
+    func sendMessage(_ message: String) {
+        let messageDataModel = messagesDataSource.sendMessage(message: message)
+        output?.loadedData(messageDataModel)
+    }
+    
     func loadData() {
         let messages = messagesDataSource.loadMessages()
         output?.loadedData(messages)

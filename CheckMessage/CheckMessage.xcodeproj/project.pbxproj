@@ -11,6 +11,7 @@
 		6619977B2C5ACA4E00E681E3 /* user.png in Resources */ = {isa = PBXBuildFile; fileRef = 661997792C5ACA4E00E681E3 /* user.png */; };
 		6619977D2C5ACD8400E681E3 /* GlobalConst.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6619977C2C5ACD8400E681E3 /* GlobalConst.swift */; };
 		6619977F2C5ADAEA00E681E3 /* IncomingMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6619977E2C5ADAEA00E681E3 /* IncomingMessageCell.swift */; };
+		661997832C5AEB3A00E681E3 /* SendMessgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 661997822C5AEB3A00E681E3 /* SendMessgeView.swift */; };
 		663B14F12C5A43DD004A189E /* Identifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 663B14F02C5A43DD004A189E /* Identifiable.swift */; };
 		663B14F32C5A4998004A189E /* MessageDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 663B14F22C5A4998004A189E /* MessageDataModel.swift */; };
 		663B14F52C5A4AD6004A189E /* TestMessgesRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 663B14F42C5A4AD6004A189E /* TestMessgesRepository.swift */; };
@@ -35,6 +36,7 @@
 		661997792C5ACA4E00E681E3 /* user.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = user.png; sourceTree = "<group>"; };
 		6619977C2C5ACD8400E681E3 /* GlobalConst.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalConst.swift; sourceTree = "<group>"; };
 		6619977E2C5ADAEA00E681E3 /* IncomingMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomingMessageCell.swift; sourceTree = "<group>"; };
+		661997822C5AEB3A00E681E3 /* SendMessgeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendMessgeView.swift; sourceTree = "<group>"; };
 		663B14F02C5A43DD004A189E /* Identifiable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Identifiable.swift; sourceTree = "<group>"; };
 		663B14F22C5A4998004A189E /* MessageDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageDataModel.swift; sourceTree = "<group>"; };
 		663B14F42C5A4AD6004A189E /* TestMessgesRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestMessgesRepository.swift; sourceTree = "<group>"; };
@@ -141,6 +143,7 @@
 		66A12A5E2C5845D80006467D /* View */ = {
 			isa = PBXGroup;
 			children = (
+				661997822C5AEB3A00E681E3 /* SendMessgeView.swift */,
 				66A12A6D2C584D1E0006467D /* Cell */,
 				66A12A5F2C5845D80006467D /* MainScreenViewController.swift */,
 				66A12A692C584A3D0006467D /* CustomCollectionLayout.swift */,
@@ -254,6 +257,7 @@
 				663B14F52C5A4AD6004A189E /* TestMessgesRepository.swift in Sources */,
 				6619977D2C5ACD8400E681E3 /* GlobalConst.swift in Sources */,
 				66A12A482C5844FC0006467D /* ViewController.swift in Sources */,
+				661997832C5AEB3A00E681E3 /* SendMessgeView.swift in Sources */,
 				66A12A6C2C584C2E0006467D /* TableController.swift in Sources */,
 				663B14F32C5A4998004A189E /* MessageDataModel.swift in Sources */,
 				663B14F72C5A4BEC004A189E /* MessageViewModel.swift in Sources */,
