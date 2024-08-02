@@ -16,7 +16,7 @@ class OutgoingMessageCell: UITableViewCell, CellIdentifiable {
         static let messgeSideOffset: CGFloat = 10
         static let bubbleCornerRadius: CGFloat = 10
         static let imgGalleryHeightOpen: CGFloat = 100
-        static let imgGalleryHeightClosed: CGFloat = 0
+        static let imgGalleryHeightClosed: CGFloat = 0.1
     }
     
     private var imgGalleryHeightConstraint: NSLayoutConstraint?
@@ -25,7 +25,7 @@ class OutgoingMessageCell: UITableViewCell, CellIdentifiable {
         messageLabel.text = viewModel.message
         userAvatarImage.image = viewModel.image
         
-        guard let images = viewModel.messageImages else {
+        guard let images = viewModel.messageImages, images.isEmpty == false else {
             imgGalleryHeightConstraint?.constant = Const.imgGalleryHeightClosed
             layoutIfNeeded()
             return
@@ -91,9 +91,9 @@ class OutgoingMessageCell: UITableViewCell, CellIdentifiable {
     
     private func setupSubviews() {
         contentView.addSubview(messageContainer)
-        contentView.addSubview(messageLabel)
+        messageContainer.addSubview(messageLabel)
         contentView.addSubview(userAvatarImage)
-        contentView.addSubview(imgGallery)
+        messageContainer.addSubview(imgGallery)
     }
     
     private func setupLayout() {
@@ -104,30 +104,28 @@ class OutgoingMessageCell: UITableViewCell, CellIdentifiable {
         let maxMessageWidth = width/3*2
         
         NSLayoutConstraint.activate([
-            userAvatarImage.topAnchor.constraint(greaterThanOrEqualTo: contentView.topAnchor, constant: Const.verticalOffset),
             userAvatarImage.widthAnchor.constraint(equalToConstant: Const.avatarImageSize),
             userAvatarImage.heightAnchor.constraint(equalToConstant: Const.avatarImageSize),
-            userAvatarImage.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -Const.verticalOffset),
             userAvatarImage.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            
-            
-            imgGallery.topAnchor.constraint(equalTo: contentView.topAnchor),
-            imgGallery.rightAnchor.constraint(equalTo: contentView.rightAnchor),
+//            userAvatarImage.leftAnchor.constraint(equalTo: contentView.leftAnchor),
+//
+            imgGallery.topAnchor.constraint(equalTo: messageContainer.topAnchor),
+            imgGallery.rightAnchor.constraint(equalTo: messageContainer.rightAnchor),
             imgGallery.leftAnchor.constraint(equalTo: messageContainer.leftAnchor),
-            
-            messageContainer.topAnchor.constraint(equalTo: imgGallery.bottomAnchor, constant: Const.verticalOffset),
+//            
+            messageContainer.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Const.verticalOffset),
             messageContainer.leftAnchor.constraint(equalTo: userAvatarImage.rightAnchor, constant: Const.horizontalOffset),
             messageContainer.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -Const.horizontalOffset),
-            messageContainer.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -Const.verticalOffset),
+            messageContainer.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Const.verticalOffset),
             messageContainer.widthAnchor.constraint(equalToConstant: maxMessageWidth),
-            
-            messageLabel.topAnchor.constraint(equalTo: messageContainer.topAnchor, constant: Const.messgeSideOffset),
-            messageLabel.rightAnchor.constraint(equalTo: messageContainer.rightAnchor, constant: -Const.messgeSideOffset),
-            messageLabel.bottomAnchor.constraint(equalTo: messageContainer.bottomAnchor, constant: -Const.messgeSideOffset),
-            messageLabel.leftAnchor.constraint(equalTo: messageContainer.leftAnchor, constant: Const.messgeSideOffset)
+//            
+            messageLabel.topAnchor.constraint(equalTo: imgGallery.bottomAnchor),
+            messageLabel.rightAnchor.constraint(equalTo: messageContainer.rightAnchor, constant: -10),
+            messageLabel.bottomAnchor.constraint(equalTo: messageContainer.bottomAnchor),
+            messageLabel.leftAnchor.constraint(equalTo: messageContainer.leftAnchor, constant: 10)
         ])
         
-        imgGalleryHeightConstraint = imgGallery.heightAnchor.constraint(equalToConstant: 0)
+        imgGalleryHeightConstraint = imgGallery.heightAnchor.constraint(equalToConstant: Const.imgGalleryHeightClosed)
         imgGalleryHeightConstraint?.isActive = true
         
         

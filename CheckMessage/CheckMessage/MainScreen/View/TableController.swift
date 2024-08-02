@@ -85,7 +85,9 @@ extension TableController:UITableViewDelegate, UITableViewDataSource {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let position = scrollView.contentOffset.y + scrollView.frame.height
-        guard position > scrollView.contentSize.height - Const.fetchOffset else { return }
+        guard position > scrollView.contentSize.height - Const.fetchOffset else {
+            return
+        }
         
         delegate?.loadData()
     }

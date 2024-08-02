@@ -85,7 +85,6 @@ class MainScreenViewController: UIViewController {
         view.backgroundColor = .white
         setupView()
         setupConstraints()
-        interactor.loadData()
         
         NotificationCenter.default.addObserver(self, 
                                                selector: #selector(keyboardWillShow),
