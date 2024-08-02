@@ -11,10 +11,13 @@ import UIKit
 protocol TableControllerInterface {
     func addMessages(_ data: [MessageViewModel])
     func addMessage(_ message: MessageViewModel)
+    func deleteMessage(_ message: MessageViewModel)
 }
 
 protocol TableControllerDelegate: AnyObject {
     func loadData()
+    func didTapOnCell()
+    func deleteMessage(viewModel: MessageViewModel)
 }
 
 
@@ -42,6 +45,13 @@ class TableController: NSObject {
 }
 
 extension TableController: TableControllerInterface {
+    func deleteMessage(_ message: MessageViewModel) {
+        guard let index = data.firstIndex(where: { $0.messageId == message.messageId }) else { return }
+        let indexPath = IndexPath(row: index, section: 0)
+        data.remove(at: index)
+        tableView?.deleteRows(at: [indexPath], with: .automatic)
+    }
+    
     func addMessages(_ data: [MessageViewModel]) {
         self.data.append(contentsOf: data.reversed())
         tableView?.reloadData()
@@ -69,6 +79,10 @@ extension TableController:UITableViewDelegate, UITableViewDataSource {
         }
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        delegate?.didTapOnCell()
+    }
+    
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let position = scrollView.contentOffset.y + scrollView.frame.height
         guard position > scrollView.contentSize.height - Const.fetchOffset else { return }
@@ -81,11 +95,15 @@ extension TableController:UITableViewDelegate, UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: OutgoingMessageCell.reuseIdentifier, for: indexPath) as? OutgoingMessageCell else {
             return UITableViewCell()
         }
-         
+        
         let viewModel = data[indexPath.row]
         cell.updateWithModel(viewModel)
-
+        
         cell.transform = CGAffineTransform(scaleX: 1, y: -1)
+        cell.selectionStyle = .none
+        
+        let interaction = UIContextMenuInteraction(delegate: self)
+        cell.addInteraction(interaction)
         
         return cell
     }
@@ -94,13 +112,44 @@ extension TableController:UITableViewDelegate, UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: IncomingMessageCell.reuseIdentifier, for: indexPath) as? IncomingMessageCell else {
             return UITableViewCell()
         }
-         
+        
         let viewModel = data[indexPath.row]
         cell.updateWithModel(viewModel)
-
+        
         cell.transform = CGAffineTransform(scaleX: 1, y: -1)
+        cell.selectionStyle = .none
+        
+        let interaction = UIContextMenuInteraction(delegate: self)
+        cell.addInteraction(interaction)
         
         return cell
     }
     
+}
+
+extension TableController: UIContextMenuInteractionDelegate {
+    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, 
+                                configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
+        
+        guard let tableView = tableView else { return nil }
+        let locationInTableView = tableView.convert(location, from: interaction.view)
+        guard let indexPath = tableView.indexPathForRow(at: locationInTableView) else { return nil }
+        
+        let identifier = NSString(string: "\(indexPath.row)")
+        
+        print("Action location", location)
+        print("ACTION indexPath.row:", indexPath.row)
+        let viewModel = data[indexPath.row]
+        print("Action viewModel message", viewModel.message)
+        
+        
+        return UIContextMenuConfiguration(identifier: identifier, previewProvider: nil) { [weak self] _ in
+            let deleteAction = UIAction(title: "Delete",
+                                        image: UIImage(systemName: "trash"),
+                                        attributes: .destructive) { action in
+                self?.delegate?.deleteMessage(viewModel: viewModel)
+            }
+            return UIMenu(title: "", children: [deleteAction])
+        }
+    }
 }

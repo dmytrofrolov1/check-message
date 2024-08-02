@@ -18,6 +18,16 @@ class MainScreenInteractor {
 // MARK: - MainScreenBusinessLogic
 
 extension MainScreenInteractor: MainScreenBusinessLogic {
+    func deleteMessage(message: MessageDataModel) {
+        //should interact with external api
+        output?.deleteMessage(message)
+    }
+    
+    func sendMessage(_ message: String) {
+        let messageDataModel = messagesDataSource.sendMessage(message: message)
+        output?.loadedData(messageDataModel)
+    }
+    
     func loadData() {
         let messages = messagesDataSource.loadMessages()
         output?.loadedData(messages)

@@ -9,27 +9,35 @@
 import UIKit
 
 class MainScreenViewController: UIViewController {
+    
+    private enum Const {
+        static let defaultAnimationTime: TimeInterval = 0.3
+    }
 
     var interactor: MainScreenBusinessLogic!
     var router: MainScreenRouterProtocol!
 
+    private var sendViewBottomConstraint: NSLayoutConstraint?
+    
     private lazy var tableView: UITableView = {
         let view = UITableView()
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.keyboardDismissMode = .onDrag
+        
         return view
     }()
-    
-    private lazy var textField: UITextField = {
-        let field = UITextField()
-        field.translatesAutoresizingMaskIntoConstraints = false
-        
-        return field
-    }()
-
+  
     private lazy var tableController: TableController = {
         let controller = TableController(tableView: tableView)
         controller.delegate = self
         return controller
+    }()
+    
+    private lazy var sendMessageView: SendMessgeView = {
+        let view = SendMessgeView()
+        view.delegate = self
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
     
 
@@ -67,10 +75,24 @@ class MainScreenViewController: UIViewController {
         setupView()
         setupConstraints()
         interactor.loadData()
+        
+        NotificationCenter.default.addObserver(self, 
+                                               selector: #selector(keyboardWillShow),
+                                               name: UIResponder.keyboardWillShowNotification,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self, 
+                                               selector: #selector(keyboardWillHide),
+                                               name: UIResponder.keyboardWillHideNotification,
+                                               object: nil)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     private func setupView() {
         view.addSubview(tableView)
+        view.addSubview(sendMessageView)
     }
     
     private func setupConstraints() {
@@ -80,9 +102,35 @@ class MainScreenViewController: UIViewController {
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: guide.topAnchor),
             tableView.rightAnchor.constraint(equalTo: guide.rightAnchor),
-            tableView.bottomAnchor.constraint(equalTo: guide.bottomAnchor),
-            tableView.leftAnchor.constraint(equalTo: guide.leftAnchor)
+            tableView.leftAnchor.constraint(equalTo: guide.leftAnchor),
+            
+            sendMessageView.topAnchor.constraint(equalTo: tableView.bottomAnchor),
+            sendMessageView.leftAnchor.constraint(equalTo: guide.leftAnchor),
+            sendMessageView.rightAnchor.constraint(equalTo: guide.rightAnchor),
         ])
+        
+        sendViewBottomConstraint = sendMessageView.bottomAnchor.constraint(equalTo: guide.bottomAnchor)
+        sendViewBottomConstraint?.isActive = true
+    }
+    
+    @objc func keyboardWillShow(notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
+        let animationDuration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval ?? Const.defaultAnimationTime
+        let keyboardHeight = (keyboardFrame.height) * -1
+        sendViewBottomConstraint?.constant = keyboardHeight
+        UIView.animate(withDuration: animationDuration) {
+             self.view.layoutIfNeeded()
+         }
+    }
+
+    @objc func keyboardWillHide(notification: Notification) {
+        sendViewBottomConstraint?.constant = 0
+        guard let userInfo = notification.userInfo else { return }
+        let animationDuration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval ?? Const.defaultAnimationTime
+        UIView.animate(withDuration: animationDuration) {
+             self.view.layoutIfNeeded()
+         }
     }
 }
 
@@ -90,14 +138,36 @@ class MainScreenViewController: UIViewController {
 // MARK: - MainScreenDisplayLogic
 
 extension MainScreenViewController: MainScreenDisplayLogic {
+    func loadedMessage(_ message: MessageViewModel) {
+        tableController.addMessage(message)
+    }
+    
     func loadedMessages(_ data: [MessageViewModel]) {
         tableController.addMessages(data)
     }
-    // MARK: - Display logic
+    
+    func deleteMessage(_ message: MessageViewModel) {
+        tableController.deleteMessage(message)
+    }
 }
 
 extension MainScreenViewController: TableControllerDelegate {
+    func deleteMessage(viewModel: MessageViewModel) {
+        interactor.deleteMessage(message: viewModel.dataModel)
+    }
+    
+    func didTapOnCell() {
+        view.endEditing(true)
+    }
+    
     func loadData() {
         interactor.loadData()
+    }
+}
+
+extension MainScreenViewController: SendMessgeViewDelegate {
+    func didTapSend(message: String) {
+        guard !message.isEmpty else { return }
+        interactor.sendMessage(message)
     }
 }
