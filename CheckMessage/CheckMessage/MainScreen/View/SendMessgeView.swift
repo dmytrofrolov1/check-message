@@ -37,6 +37,8 @@ class SendMessgeView: UIView {
         view.layer.cornerRadius = Const.TextField.cornerRadius
         view.layer.borderColor = UIColor(red: 204/255, green: 255/255, blue: 204/255, alpha: 0.7).cgColor
         view.layer.masksToBounds = true
+        view.returnKeyType = .send
+        view.delegate = self
 
         return view
     }()
@@ -89,5 +91,12 @@ class SendMessgeView: UIView {
             button.widthAnchor.constraint(equalToConstant: Const.Button.width),
             
         ])
+    }
+}
+
+extension SendMessgeView: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        delegate?.didTapSend(message: textField.text ?? "")
+        return true
     }
 }

@@ -8,7 +8,7 @@
 import UIKit
 
 struct MessageViewModel {
-    private let dataModel: MessageDataModel
+    let dataModel: MessageDataModel
 
     var userId: String {
         dataModel.userId
@@ -17,14 +17,16 @@ struct MessageViewModel {
     var message: String {
         dataModel.message
     }
+    
+    var messageId: String {
+        dataModel.messageId
+    }
+    
+    
 
     var image: UIImage? {
         guard let url = URL(string: dataModel.imageUrl ?? "") else { return nil }
         guard let imageData = try? Data(contentsOf: url) else { return nil }
         return UIImage(data: imageData)
-    }
-    
-    init(data: MessageDataModel) {
-        self.dataModel = data
     }
 }
