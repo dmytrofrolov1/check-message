@@ -183,6 +183,7 @@ extension MainScreenViewController: SendMessgeViewDelegate {
     func didTapSend(message: String) {
         guard !message.isEmpty else { return }
         interactor.sendMessage(message,images: selectedImages)
+        selectedImages.removeAll()
     }
 }
 
