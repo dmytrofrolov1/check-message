@@ -22,10 +22,12 @@ struct MessageViewModel {
         dataModel.messageId
     }
     
-    
+    var messageImages: [UIImage]? {
+        dataModel.messageImages
+    }
 
     var image: UIImage? {
-        guard let url = URL(string: dataModel.imageUrl ?? "") else { return nil }
+        guard let url = URL(string: dataModel.avatarImageUrl ?? "") else { return nil }
         guard let imageData = try? Data(contentsOf: url) else { return nil }
         return UIImage(data: imageData)
     }

@@ -9,6 +9,7 @@ import UIKit
 
 protocol SendMessgeViewDelegate: AnyObject {
     func didTapSend(message: String)
+    func didTapAddImage()
 }
 
 class SendMessgeView: UIView {
@@ -23,7 +24,7 @@ class SendMessgeView: UIView {
         }
         
         enum Button {
-            static let width: CGFloat = 50
+            static let width: CGFloat = 40
         }
     }
 
@@ -52,6 +53,17 @@ class SendMessgeView: UIView {
         return button
     }()
     
+    private lazy var addImageButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("+", for: .normal)
+        button.addTarget(self, action: #selector(addImageAction), for: .touchUpInside)
+        
+        return button
+    }()
+    
+    
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
@@ -69,12 +81,18 @@ class SendMessgeView: UIView {
     private func setupSubviews() {
         addSubview(textField)
         addSubview(button)
+        addSubview(addImageButton)
     }
     
     @objc
     private func sendAction() {
         delegate?.didTapSend(message: textField.text ?? "")
         textField.text = ""
+    }
+    
+    @objc
+    private func addImageAction() {
+        delegate?.didTapAddImage()
     }
     
     private func setupLayout() {
@@ -84,10 +102,15 @@ class SendMessgeView: UIView {
             textField.leftAnchor.constraint(equalTo: leftAnchor, constant: Const.horizontalOffset),
             textField.heightAnchor.constraint(equalToConstant: Const.TextField.height),
             
+            addImageButton.rightAnchor.constraint(equalTo: button.leftAnchor, constant: -Const.horizontalOffset),
+            addImageButton.topAnchor.constraint(equalTo: topAnchor),
+            addImageButton.bottomAnchor.constraint(equalTo: bottomAnchor),
+            addImageButton.leftAnchor.constraint(equalTo: textField.rightAnchor, constant: Const.horizontalOffset),
+            addImageButton.widthAnchor.constraint(equalToConstant: Const.Button.width),
+            
             button.rightAnchor.constraint(equalTo: rightAnchor, constant: -Const.horizontalOffset),
             button.topAnchor.constraint(equalTo: topAnchor),
             button.bottomAnchor.constraint(equalTo: bottomAnchor),
-            button.leftAnchor.constraint(equalTo: textField.rightAnchor, constant: Const.horizontalOffset),
             button.widthAnchor.constraint(equalToConstant: Const.Button.width),
             
         ])

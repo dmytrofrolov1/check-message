@@ -136,12 +136,7 @@ extension TableController: UIContextMenuInteractionDelegate {
         guard let indexPath = tableView.indexPathForRow(at: locationInTableView) else { return nil }
         
         let identifier = NSString(string: "\(indexPath.row)")
-        
-        print("Action location", location)
-        print("ACTION indexPath.row:", indexPath.row)
         let viewModel = data[indexPath.row]
-        print("Action viewModel message", viewModel.message)
-        
         
         return UIContextMenuConfiguration(identifier: identifier, previewProvider: nil) { [weak self] _ in
             let deleteAction = UIAction(title: "Delete",

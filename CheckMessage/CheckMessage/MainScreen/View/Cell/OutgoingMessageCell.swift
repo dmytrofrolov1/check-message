@@ -15,13 +15,26 @@ class OutgoingMessageCell: UITableViewCell, CellIdentifiable {
         static let verticalOffset: CGFloat = 20
         static let messgeSideOffset: CGFloat = 10
         static let bubbleCornerRadius: CGFloat = 10
-        
+        static let imgGalleryHeightOpen: CGFloat = 100
+        static let imgGalleryHeightClosed: CGFloat = 0
     }
     
+    private var imgGalleryHeightConstraint: NSLayoutConstraint?
     
     func updateWithModel(_ viewModel: MessageViewModel) {
         messageLabel.text = viewModel.message
         userAvatarImage.image = viewModel.image
+        
+        guard let images = viewModel.messageImages else {
+            imgGalleryHeightConstraint?.constant = Const.imgGalleryHeightClosed
+            layoutIfNeeded()
+            return
+        }
+        
+        imgGalleryHeightConstraint?.constant = Const.imgGalleryHeightOpen
+        layoutIfNeeded()
+        imgGallery.updateWithImages(images: images)
+        
     }
     
     private lazy var messageLabel: UILabel = {
@@ -55,6 +68,13 @@ class OutgoingMessageCell: UITableViewCell, CellIdentifiable {
         return imageView
     }()
     
+    private lazy var imgGallery: ImagesGalleryView = {
+        let view = ImagesGalleryView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        return view
+    }()
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setup()
@@ -73,6 +93,7 @@ class OutgoingMessageCell: UITableViewCell, CellIdentifiable {
         contentView.addSubview(messageContainer)
         contentView.addSubview(messageLabel)
         contentView.addSubview(userAvatarImage)
+        contentView.addSubview(imgGallery)
     }
     
     private func setupLayout() {
@@ -90,7 +111,11 @@ class OutgoingMessageCell: UITableViewCell, CellIdentifiable {
             userAvatarImage.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             
             
-            messageContainer.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Const.verticalOffset),
+            imgGallery.topAnchor.constraint(equalTo: contentView.topAnchor),
+            imgGallery.rightAnchor.constraint(equalTo: contentView.rightAnchor),
+            imgGallery.leftAnchor.constraint(equalTo: messageContainer.leftAnchor),
+            
+            messageContainer.topAnchor.constraint(equalTo: imgGallery.bottomAnchor, constant: Const.verticalOffset),
             messageContainer.leftAnchor.constraint(equalTo: userAvatarImage.rightAnchor, constant: Const.horizontalOffset),
             messageContainer.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -Const.horizontalOffset),
             messageContainer.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -Const.verticalOffset),
@@ -100,7 +125,11 @@ class OutgoingMessageCell: UITableViewCell, CellIdentifiable {
             messageLabel.rightAnchor.constraint(equalTo: messageContainer.rightAnchor, constant: -Const.messgeSideOffset),
             messageLabel.bottomAnchor.constraint(equalTo: messageContainer.bottomAnchor, constant: -Const.messgeSideOffset),
             messageLabel.leftAnchor.constraint(equalTo: messageContainer.leftAnchor, constant: Const.messgeSideOffset)
-            
         ])
+        
+        imgGalleryHeightConstraint = imgGallery.heightAnchor.constraint(equalToConstant: 0)
+        imgGalleryHeightConstraint?.isActive = true
+        
+        
     }
 }

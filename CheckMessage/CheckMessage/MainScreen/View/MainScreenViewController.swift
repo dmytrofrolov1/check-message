@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import PhotosUI
 
 class MainScreenViewController: UIViewController {
     
@@ -18,7 +19,7 @@ class MainScreenViewController: UIViewController {
     var router: MainScreenRouterProtocol!
 
     private var sendViewBottomConstraint: NSLayoutConstraint?
-    
+    private var selectedImages = [UIImage]()
     private lazy var tableView: UITableView = {
         let view = UITableView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -40,6 +41,16 @@ class MainScreenViewController: UIViewController {
         return view
     }()
     
+    private lazy var imagePicker: PHPickerViewController = {
+        var configuration = PHPickerConfiguration()
+        configuration.selectionLimit = 0
+        configuration.filter = .images
+        
+        let picker = PHPickerViewController(configuration: configuration)
+        picker.delegate = self
+        
+        return picker
+    }()
 
     // MARK: - Initializers
 
@@ -166,8 +177,33 @@ extension MainScreenViewController: TableControllerDelegate {
 }
 
 extension MainScreenViewController: SendMessgeViewDelegate {
+    func didTapAddImage() {
+        present(imagePicker, animated: true)
+    }
+    
     func didTapSend(message: String) {
         guard !message.isEmpty else { return }
-        interactor.sendMessage(message)
+        interactor.sendMessage(message,images: selectedImages)
     }
+}
+
+extension MainScreenViewController: PHPickerViewControllerDelegate {
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+          dismiss(animated: true, completion: nil)
+          
+        selectedImages.removeAll()
+        let itemProviders = results.map(\.itemProvider)
+        
+        for itemProvider in itemProviders {
+              if itemProvider.canLoadObject(ofClass: UIImage.self) {
+                  itemProvider.loadObject(ofClass: UIImage.self) { [weak self] image, error in
+                      if let image = image as? UIImage {
+                          DispatchQueue.main.async {
+                              self?.selectedImages.append(image)
+                          }
+                      }
+                  }
+              }
+          }
+      }
 }

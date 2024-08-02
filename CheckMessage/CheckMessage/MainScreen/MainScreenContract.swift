@@ -10,7 +10,7 @@ import UIKit
 
 protocol MainScreenBusinessLogic {
     func loadData()
-    func sendMessage(_ message: String)
+    func sendMessage(_ message: String, images: [UIImage]?)
     func deleteMessage(message: MessageDataModel)
 }
 

@@ -5,7 +5,7 @@
 //  Created by Dmytro on 31.07.2024.
 //
 
-import Foundation
+import UIKit
 
 class TestMessgesRepository {
     private enum Const {
@@ -33,17 +33,22 @@ class TestMessgesRepository {
             let message = generateMessage()
             let imageUrl = userId == GlobalConst.userId ? userImageUrl : clientImageUrl
             
-            messages.append(MessageDataModel(messageId: messageId, userId: userId, message: message, imageUrl: imageUrl))
+            messages.append(MessageDataModel(messageId: messageId,
+                                             userId: userId,
+                                             message: message,
+                                             avatarImageUrl: imageUrl,
+                                             messageImages: nil))
         }
         
         return messages
     }
     
-    func sendMessage(message: String) -> MessageDataModel {
-        return MessageDataModel(messageId: UUID().uuidString, 
+    func sendMessage(message: String, images: [UIImage]?) -> MessageDataModel {
+        return MessageDataModel(messageId: UUID().uuidString,
                                 userId: GlobalConst.userId,
                                 message: message,
-                                imageUrl: userImageUrl)
+                                avatarImageUrl: userImageUrl,
+                                messageImages: images)
     }
     
     

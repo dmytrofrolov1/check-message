@@ -19,6 +19,7 @@ class MainScreenPresenter {
 // MARK: - MainScreenPresentationLogic
 
 extension MainScreenPresenter: MainScreenPresentationLogic {
+
     func deleteMessage(_ message: MessageDataModel) {
         print("Delete message presenter?")
         let viewModel = MessageViewModel(dataModel: message)
