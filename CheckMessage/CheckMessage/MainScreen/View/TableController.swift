@@ -39,6 +39,7 @@ class TableController: NSObject {
         self.tableView?.dataSource = self
         self.tableView?.transform = CGAffineTransform(scaleX: 1, y: -1)
         self.tableView?.register(OutgoingMessageCell.self, forCellReuseIdentifier: OutgoingMessageCell.reuseIdentifier)
+        self.tableView?.register(OutgoingGalleryCell.self, forCellReuseIdentifier: OutgoingGalleryCell.reuseIdentifier)
         self.tableView?.register(IncomingMessageCell.self, forCellReuseIdentifier: IncomingMessageCell.reuseIdentifier)
         self.tableView?.separatorStyle = .none
     }
@@ -72,11 +73,18 @@ extension TableController:UITableViewDelegate, UITableViewDataSource {
    
         let viewModel = data[indexPath.row]
    
-        if viewModel.userId == GlobalConst.userId {
-            return outgoingMessage(tableView: tableView, indexPath: indexPath)
-        } else {
+        
+        switch viewModel.direction {
+        case .outgoing:
+            if viewModel.type == .images {
+                return outgoingMessageWithImages(tableView: tableView, indexPath: indexPath)
+            } else {
+                return outgoingMessage(tableView: tableView, indexPath: indexPath)
+            }
+        case .incoming:
             return incomingMessage(tableView: tableView, indexPath: indexPath)
         }
+       
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -95,6 +103,24 @@ extension TableController:UITableViewDelegate, UITableViewDataSource {
     
     func outgoingMessage(tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: OutgoingMessageCell.reuseIdentifier, for: indexPath) as? OutgoingMessageCell else {
+            return UITableViewCell()
+        }
+        
+        let viewModel = data[indexPath.row]
+        cell.updateWithModel(viewModel)
+        
+        cell.transform = CGAffineTransform(scaleX: 1, y: -1)
+        cell.selectionStyle = .none
+        
+        let interaction = UIContextMenuInteraction(delegate: self)
+        cell.addInteraction(interaction)
+        
+        return cell
+    }
+    
+    func outgoingMessageWithImages(tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
+        
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: OutgoingGalleryCell.reuseIdentifier, for: indexPath) as? OutgoingGalleryCell else {
             return UITableViewCell()
         }
         
