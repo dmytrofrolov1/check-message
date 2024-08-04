@@ -7,9 +7,27 @@
 
 import UIKit
 
+enum MessageType {
+    case text
+    case images
+}
+
+enum MessageDirection {
+    case outgoing
+    case incoming
+}
+
 struct MessageViewModel {
     let dataModel: MessageDataModel
 
+    var type: MessageType {
+        return messageImages?.isEmpty ?? true ? .text : .images
+    }
+    
+    var direction: MessageDirection {
+        return userId == GlobalConst.userId ? .outgoing : .incoming
+    }
+    
     var userId: String {
         dataModel.userId
     }
